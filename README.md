@@ -1,5 +1,4 @@
 # Response-Categorizer
-# Project Title
 An application to filter the responses on Discussion forums
 
 
@@ -43,20 +42,20 @@ pip install -U numpy
 
 Steps to install the project
 
-'''
+```
 Clone or download the project
-'''
+```
 
 
-'''
+```
 Install all the neccessary packages
-'''
+```
 
 
-'''
+```
 Execute run.py
 Open http://127.0.0.1:5000/ in the browser
-'''
+```
 
 ## Built With
 
