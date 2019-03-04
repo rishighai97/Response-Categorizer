@@ -1,5 +1,5 @@
 # Response-Categorizer
-An application to filter the responses on Discussion forums
+An application to filter the responses in Discussion forums
 
 
 ### Prerequisites
