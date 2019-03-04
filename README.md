@@ -51,6 +51,10 @@ Clone or download the project
 Install all the neccessary packages
 ```
 
+```
+Download word2vec model from https://code.google.com/archive/p/word2vec/
+Extract the bin file and move it to static/libraries folder
+```
 
 ```
 Execute run.py
