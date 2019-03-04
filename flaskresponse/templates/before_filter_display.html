@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+
+<h1>
+	{{ question }}
+</h1>
+
+<h4>Model Answer</h4>
+		<article class="media content-section">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <h6><a class="article-title">{{ accepted_answer }}</a></h6>
+		      <!--
+		      {% if accepted_comments is not string and accepted_comments|length > 0 %}
+		      	{% for comm in accepted_comments %}
+		      		<article class="media content-section" style = "margin-left:15%;background-color: #5f788a;color:#ffffff">
+		      			<p>{{ comm }}</p>
+		      		</article>
+		      	{% endfor %}
+		      {% else %}
+		      	<p></p>
+		      {% endif %}
+		  -->
+		    </div>
+		  </div>
+		</article>
+
+<h4>Answers</h4>
+	{% for ans in answers %}
+		<article class="media content-section">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <h6><a class="article-title">{{ ans }}</a></h6>		      
+		      	{% if comments[loop.index0] is not string and comments[loop.index0] is iterable %}
+		     		{% for comm in comments[loop.index0] %}
+		     			<article class="media content-section" style = "margin-left:15%;background-color: #5f788a;color:#ffffff">
+		      					<p>{{ comm }}</p>
+		      			</article>
+		      		{% endfor %}
+		      	{% endif %}		  	  
+		    </div>
+		  </div>
+		</article>
+	{% endfor %}
+
+{% endblock content %}
