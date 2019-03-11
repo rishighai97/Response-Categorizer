@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- 
+0 - question
+1 - accepted answer
+2 - answers
+que, accepted_answer, [ans_id, answer, score, [comm, score, pol]]
+-->
+<form method="POST" action="" novalidate>
+{{ form.hidden_tag() }}
+
+<h1>
+	{{result[0]}}
+</h1>
+
+<h4>Model Answer</h4>
+		<article class="media content-section">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <h6><a class="article-title">{{ result[1] }}</a></h6>
+		    </div>
+		  </div>
+		</article>
+
+<!-- Control buttons -->
+{{form.htl(class="btn btn-outline-info")}} {{form.lth(class="btn btn-outline-info")}}
+       
+<h4>Answers</h4>
+	
+	{% for res in result[2] %}
+		<article class="media content-section">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		    	<span class="badge badge-secondary">{{ res[2] }}</span>	 
+		      <h6><a class="article-title">{{ res[1] }}</a></h6>	
+		      <br><br>
+		           
+		     		{% for comm in res[3] %}
+		     			{% if comm[2] != -1 %}
+
+		     			<article class="media content-section" style = "margin-left:15%;color:#ffffff;
+		     				{% if comm[2]==1 %}
+		     					background-color: green;
+		     				{% else %}
+		     					background-color: red;
+		     				{% endif %}
+		     			">	
+		     						
+		     						<p>{{ comm[0] }}</p>
+				      		<span class="badge badge-secondary" >{{ comm[1] }}</span>			
+		      			</article>
+
+		      		    {% endif %}
+		      		{% endfor %}		  	  
+		    </div>
+		  </div>
+		</article>
+	{% endfor %}
+</form>
+{% endblock content %}

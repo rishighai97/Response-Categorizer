@@ -9,96 +9,166 @@ import pickle
 import sys
 from decimal import Decimal
 from flask import current_app
+from flaskresponse.filter.filters import filter_dump
 #import gensim.models.keyedvectors as word2vec
 lemmatizer = WordNetLemmatizer()
 library_path = os.path.join(current_app.root_path, 'static/libraries','GoogleNews-vectors-negative300.bin')
 model = gensim.models.KeyedVectors.load_word2vec_format(library_path, binary=True,limit=500000)  
 
+def retrieve():
+	path = os.path.join(current_app.root_path, 'static/pickles','results.pickle')
+	with open(path, "rb") as fp:
+		results = pickle.load(fp)
+	return results
+     
+def word_movers_score(comments,answers,accepted_answer):
+	min_wm_ans = float('inf')
+	max_wm_ans = float('-inf')
+	min_ln_ans = float('inf')
+	max_ln_ans = float('-inf')
+
+	min_wm_comm = float('inf')
+	max_wm_comm = float('-inf')
+	min_ln_comm = float('inf')
+	max_ln_comm = float('-inf')
+
+	comments_score = []
+	comments_length = []
+	for comm in comments:
+		if comm == 'none':
+			comments_score.append('none')
+			comments_length.append('none')
+		else:
+			score_wm = []
+			score_ln = []
+			for c in comm:
+				current_words = word_tokenize(c)
+				current_words = [lemmatizer.lemmatize(i).lower() for i in current_words]
+				val_wm = model.wmdistance(current_words, accepted_answer)
+				if val_wm<=min_wm_comm:
+					min_wm_comm = val_wm
+				if val_wm>max_wm_comm:
+					max_wm_comm = val_wm
+				score_wm.append(val_wm)
+				val_ln=len(current_words)/len(word_tokenize(accepted_answer))
+				if val_ln<=min_ln_comm:
+					min_ln_comm = val_ln
+				if val_ln>max_ln_comm:
+					max_ln_comm = val_ln
+				score_ln.append(val_ln)
+			comments_score.append(score_wm)
+			comments_length.append(score_ln)
+
+
+	answers_score = []
+	answers_length = []
+	for ans in answers:
+		current_words = word_tokenize(ans)
+		current_words = [lemmatizer.lemmatize(i).lower() for i in current_words]
+		val_wm = model.wmdistance(current_words, accepted_answer)
+		if val_wm<=min_wm_ans:
+			min_wm_ans = val_wm
+		if val_wm>max_wm_ans:
+			max_wm_ans = val_wm	
+		val_ln = len(current_words)/len(word_tokenize(accepted_answer))
+		if val_ln<=min_ln_ans:
+			min_ln_ans = val_ln
+		if val_ln>max_ln_ans:
+			max_ln_ans = val_ln				
+		answers_score.append(val_wm)
+		answers_length.append(val_ln)
+
+	final_answers_score_wm = []
+	final_answers_score_ln = []
+	for i in range(0,len(answers_score)):
+		val_wm = (answers_score[i]-min_wm_ans)/(max_wm_ans-min_wm_ans)
+		val_wm = 1 - val_wm
+		final_answers_score_wm.append(val_wm)
+
+		val_ln = (answers_length[i]-min_ln_ans)/(max_ln_ans-min_ln_ans)
+		'''val_ln = Decimal(val_ln)
+		val_ln = val_ln.quantize(Decimal('0.0001'))'''
+		final_answers_score_ln.append(val_ln)
+
+
+	final_comments_score_wm = []
+	final_comments_score_ln = []
+	for i  in range(len(comments_score)):
+		if comments_score[i] == 'none':
+			final_comments_score_wm.append('none')
+			final_comments_score_ln.append('none')
+		else:
+			temp_wm = []
+			temp_ln = []
+			for j in range(0,len(comments_score[i])):
+				val_wm = (comments_score[i][j]-min_wm_comm)/(max_wm_comm-min_wm_comm)
+				val_wm = 1 - val_wm
+				temp_wm.append(val_wm)
+
+				val_ln = (comments_length[i][j]-min_ln_comm)/(max_ln_comm-min_ln_comm)
+				temp_ln.append(val_ln)
+			final_comments_score_wm.append(temp_wm)
+			final_comments_score_ln.append(temp_ln)
+
+	return final_comments_score_wm,final_comments_score_ln,final_answers_score_wm,final_answers_score_ln
+
+def final_score(comments_wm,comments_ln,answers_wm,answers_ln,comments_polarity):
+	answers_score = []
+	for i in range(0,len(answers_wm)):
+		answers_val = answers_wm[i]*0.6+answers_ln[i]*0.4
+		answers_score.append(answers_val)
+
+	comments_score = []
+	for i in range(len(comments_wm)):
+		if comments_wm[i] == 'none':
+			comments_score.append('none')
+		else:
+			temp_score = []
+			for j in range(0,len(comments_wm[i])):
+				if answers_score[i]>=0.2:
+					if comments_polarity[i][j]==1:
+						pol = 0.2
+					else:
+						pol = 0
+				else:
+					if comments_polarity[i][j]<0.5:
+						pol = 0.2
+					else:
+						pol = 0
+				comments_val = comments_ln[i][j]*0.3 + comments_wm[i][j]*0.5 + pol
+				temp_score.append(comments_val)
+			comments_score.append(temp_score)
+	return comments_score, answers_score
 
 
 
-comments_path = os.path.join(current_app.root_path, 'static/pickles','comments.pickle')
-with open(comments_path, "rb") as fp:
-        comments = pickle.load(fp)
- 
-answers_path = os.path.join(current_app.root_path, 'static/pickles','answers.pickle')
-with open(answers_path, "rb") as fp:
-        answers = pickle.load(fp)
-    
-accepted_answer_path = os.path.join(current_app.root_path, 'static/pickles','accepted_answer.pickle')
-with open(accepted_answer_path, "rb") as fp:
-        accepted_answer = pickle.load(fp)     
-    
 
 
 
-#sentence = ''.join(e for e in sentence if e.isalnum()) # only alphanumerals
-
-minimum = float('inf')
-maximum = float('-inf')
-
-comments_score = []
-for comm in comments:
-	if comm == 'none':
-		comments_score.append('none')
-	else:
-		score = []
-		for c in comm:
-			current_words = word_tokenize(c)
-			current_words = [lemmatizer.lemmatize(i).lower() for i in current_words]
-			val = model.wmdistance(current_words, accepted_answer)
-			if val<=minimum:
-				minimum = val
-			if val>=maximum:
-				maximum = val
-			score.append(val)
-		comments_score.append(score)
-
-answers_score = []
-for ans in answers:
-	current_words = word_tokenize(ans)
-	current_words = [lemmatizer.lemmatize(i).lower() for i in current_words]
-	val = model.wmdistance(current_words, accepted_answer)
-	if val<=minimum:
-		minimum = val
-	if val>=maximum:
-		maximum = val				
-	answers_score.append(val)
 
 
-final_answers_score = []
-for score in answers_score:
-	val = (score-minimum)/(maximum-minimum)
-	val = 1 - val
-	val = Decimal(val)
-	val = val.quantize(Decimal('0.0001'))
-	final_answers_score.append(val)
+results = retrieve()
+comments = results[2]
+answers = results[1]
+accepted_answer = results[3]
+comments_polarity = results[5]
 
-final_comments_score = []
-for c in comments_score:
-	if c == 'none':
-		final_comments_score.append('none')
-	else:
-		temp = []
-		for score in c:
-			val = (score-minimum)/(maximum-minimum)
-			val = 1 - val
-			val = Decimal(val)
-			val = val.quantize(Decimal('0.0001'))
-			temp.append(val)
-		final_comments_score.append(temp)
-		
+comments_wm,comments_ln,answers_wm,answers_ln = word_movers_score(comments,answers,accepted_answer)
+comments_score,answers_score = final_score(comments_wm,comments_ln,answers_wm,answers_ln,comments_polarity)
 
-	
-comments_score_path = os.path.join(current_app.root_path, 'static/pickles','comments_score.pickle')			
-with open(comments_score_path, "wb") as fp:
-        pickle.dump(final_comments_score,fp) 
+
+
+
+results.append(comments_score)
+results.append(answers_score)
+'''
+path = os.path.join(current_app.root_path, 'static/pickles','results.pickle')			
+with open(path, "wb") as fp:
+        pickle.dump(results,fp) 
+'''
+filter_dump(results)
         
 
-answers_score_path = os.path.join(current_app.root_path, 'static/pickles','answers_score.pickle')		
-with open(answers_score_path, "wb") as fp:
-        pickle.dump(final_answers_score,fp) 
-        
 
 
 

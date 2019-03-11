@@ -7,8 +7,11 @@ from flaskresponse.models import User
 class FilterForm(FlaskForm):
 	url = StringField('URL', 
 							validators=[Length(min=0, max=2000)])
-	submit = SubmitField('Submit URL')
+	submit_url = SubmitField('Submit URL')
 
-	submit_level1 = SubmitField('Level 1 filter')
-	submit_level2 = SubmitField('Level 2 filter')
+	submit_filter = SubmitField('Filter')
+
+class SortingForm(FlaskForm):
+	htl = SubmitField('High To Low')
+	lth = SubmitField('Low To High')
 

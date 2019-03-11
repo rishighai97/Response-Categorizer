@@ -12,7 +12,7 @@ import pandas as pd
 import math
 import os
 from flask import current_app
-
+from flaskresponse.filter.utils import dump_data, retrieve_data, retrieve_results
 
 lemmatizer = WordNetLemmatizer()
 tf.reset_default_graph()
@@ -87,41 +87,17 @@ def use_neural_network(data):
 
 
 def filter_level1():
-    comments_path = os.path.join(current_app.root_path, 'static/pickles','comments.pickle')
-    with open(comments_path, "rb") as fp:
-        comments = pickle.load(fp)
-    polarity = use_neural_network(comments) 
-    path = os.path.join(current_app.root_path, 'static/pickles','comments_polarity.pickle')
+    data = retrieve_data()
+    polarity = use_neural_network(data[2]) 
+    data.append(polarity)
+    path = os.path.join(current_app.root_path, 'static/pickles','results.pickle')
     with open(path, "wb") as fp:
-        pickle.dump(polarity,fp) 
+        pickle.dump(data,fp) 
 
     
     
 
 filter_level1()
-    
-'''
-def retrieve_level1_data():
-	question_path = os.path.join(app.root_path, 'static/pickles','question.pickle')
-	with open(question_path, "rb") as fp:
-		question = pickle.load(fp)
-	answers_path = os.path.join(app.root_path, 'static/pickles','answers.pickle')
-	with open(answers_path, "rb") as fp:
-		answers = pickle.load(fp)
-	comments_path = os.path.join(app.root_path, 'static/pickles','comments.pickle')
-	with open(comments_path, "rb") as fp:
-		comments = pickle.load(fp)
-	accepted_answer_path = os.path.join(app.root_path, 'static/pickles','accepted_answer.pickle')
-	with open(accepted_answer_path, "rb") as fp:
-		accepted_answer = pickle.load(fp)
-	accepted_comments_path = os.path.join(app.root_path, 'static/pickles','accepted_comments.pickle')
-	with open(accepted_comments_path, "rb") as fp:
-		accepted_comments = pickle.load(fp)
-	comments_polarity_path = os.path.join(app.root_path, 'static/pickles','comments_polarity.pickle')
-	with open(comments_polarity_path, "rb") as fp:
-		comments_polarity = pickle.load(fp)	
-	return question,answers,comments,accepted_answer,accepted_comments, comments_polarity
-'''
 
 
 

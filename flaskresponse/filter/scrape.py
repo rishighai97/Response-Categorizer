@@ -9,45 +9,7 @@ import os
 from flask import current_app
 
 
-#page = requests.get("https://stackoverflow.com/questions/8620127/maven-in-eclipse-step-by-step-installation")
-#soup = BeautifulSoup(page.content, 'html.parser')
 
-
-def dump_data(question,answers,comments,accepted_answer,accepted_comments):
-	question_path = os.path.join(current_app.root_path, 'static/pickles','question.pickle')
-	with open(question_path, "wb") as fp:   #Pickling
-		pickle.dump(question, fp)
-	answers_path = os.path.join(current_app.root_path, 'static/pickles','answers.pickle')
-	with open(answers_path, "wb") as fp:   #Pickling
-		pickle.dump(answers, fp)
-	comments_path = os.path.join(current_app.root_path, 'static/pickles','comments.pickle')
-	with open(comments_path, "wb") as fp:   #Pickling
-		pickle.dump(comments, fp)
-	accepted_answer_path = os.path.join(current_app.root_path, 'static/pickles','accepted_answer.pickle')
-	with open(accepted_answer_path, "wb") as fp:   #Pickling
-		pickle.dump(accepted_answer, fp)
-	accepted_comments_path = os.path.join(current_app.root_path, 'static/pickles','accepted_comments.pickle')
-	with open(accepted_comments_path, "wb") as fp:   #Pickling
-		pickle.dump(accepted_comments, fp)
-
-
-def retrieve_data():
-	question_path = os.path.join(current_app.root_path, 'static/pickles','question.pickle')
-	with open(question_path, "rb") as fp:
-		question = pickle.load(fp)
-	answers_path = os.path.join(current_app.root_path, 'static/pickles','answers.pickle')
-	with open(answers_path, "rb") as fp:
-		answers = pickle.load(fp)
-	comments_path = os.path.join(current_app.root_path, 'static/pickles','comments.pickle')
-	with open(comments_path, "rb") as fp:
-		comments = pickle.load(fp)
-	accepted_answer_path = os.path.join(current_app.root_path, 'static/pickles','accepted_answer.pickle')
-	with open(accepted_answer_path, "rb") as fp:
-		accepted_answer = pickle.load(fp)
-	accepted_comments_path = os.path.join(current_app.root_path, 'static/pickles','accepted_comments.pickle')
-	with open(accepted_comments_path, "rb") as fp:
-		accepted_comments = pickle.load(fp)
-	return question,answers,comments,accepted_answer,accepted_comments
 
 
 def cleanhtml(raw_html):

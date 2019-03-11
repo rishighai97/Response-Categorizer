@@ -2,34 +2,41 @@ import pickle
 import os
 from flask import current_app
 
-
-def retrieve_level1_data():
-	question_path = os.path.join(current_app.root_path, 'static/pickles','question.pickle')
-	with open(question_path, "rb") as fp:
-		question = pickle.load(fp)
-	answers_path = os.path.join(current_app.root_path, 'static/pickles','answers.pickle')
-	with open(answers_path, "rb") as fp:
-		answers = pickle.load(fp)
-	comments_path = os.path.join(current_app.root_path, 'static/pickles','comments.pickle')
-	with open(comments_path, "rb") as fp:
-		comments = pickle.load(fp)
-	accepted_answer_path = os.path.join(current_app.root_path, 'static/pickles','accepted_answer.pickle')
-	with open(accepted_answer_path, "rb") as fp:
-		accepted_answer = pickle.load(fp)
-	accepted_comments_path = os.path.join(current_app.root_path, 'static/pickles','accepted_comments.pickle')
-	with open(accepted_comments_path, "rb") as fp:
-		accepted_comments = pickle.load(fp)
-	comments_polarity_path = os.path.join(current_app.root_path, 'static/pickles','comments_polarity.pickle')
-	with open(comments_polarity_path, "rb") as fp:
-		comments_polarity = pickle.load(fp)	
-	return question,answers,comments,accepted_answer,accepted_comments, comments_polarity
+def dump_data(question,answers,comments,accepted_answer,accepted_comments):
+	data = []
+	data.append(question)
+	data.append(answers)
+	data.append(comments)
+	data.append(accepted_answer)
+	data.append(accepted_comments)
+	path = os.path.join(current_app.root_path, 'static/pickles','data.pickle')
+	with open(path, "wb") as fp:   
+		pickle.dump(data, fp)
 
 
-def retrieve_level2_data():
-	comments_score_path = os.path.join(current_app.root_path, 'static/pickles','comments_score.pickle')
-	with open(comments_score_path, "rb") as fp:
-		comments_score = pickle.load(fp)
-	answers_score_path = os.path.join(current_app.root_path, 'static/pickles','answers_score.pickle')
-	with open(answers_score_path, "rb") as fp:
-		answers_score = pickle.load(fp)
-	return comments_score,answers_score
+def retrieve_data():
+	path = os.path.join(current_app.root_path, 'static/pickles','data.pickle')
+	with open(path, "rb") as fp:
+		data = pickle.load(fp)
+	return data
+
+
+def retrieve_results():
+	path = os.path.join(current_app.root_path, 'static/pickles','results.pickle')
+	with open(path, "rb") as fp:
+		results = pickle.load(fp)
+	return results
+	
+
+
+
+'''
+0 - question
+1 - answers
+2 - comments
+3 - accepted_answer
+4 - accepted_comments
+5 - comments_polarity
+6 - comments_score
+7 - answers_score
+'''
