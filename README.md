@@ -31,7 +31,6 @@ Installing flask packages neccessary in the application
 pip install flask-sqlalchemy
 pip install flask-bcrypt
 pip install flask-login
-pip install secrets
 pip install Pillow
 pip install beautifulsoup4
 pip install flask-wtf
