@@ -7,6 +7,14 @@
 2 - answers
 que, accepted_answer, [ans_id, answer, score, [comm, score, pol]]
 -->
+
+<head>
+	<script>
+
+	</script>
+</head>
+
+
 <form method="POST" action="" novalidate>
 {{ form.hidden_tag() }}
 
@@ -24,11 +32,13 @@ que, accepted_answer, [ans_id, answer, score, [comm, score, pol]]
 		</article>
 
 <!-- Control buttons -->
-{{form.htl(class="btn btn-outline-info")}} {{form.lth(class="btn btn-outline-info")}}
-       
+{{form.htl(class="btn btn-outline-info")}} {{form.lth(class="btn btn-outline-info")}}<br>
+{{form.minimum.label(class="form-control-label")}} : {{form.minimum(class="form-control form-control-lg") }}<br>
+{{form.maximum.label(class="form-control-label")}}  :  {{form.maximum(class="form-control form-control-lg") }} 	    
 <h4>Answers</h4>
 	
 	{% for res in result[2] %}
+	{% if res[2]>=minimum and res[2]<=maximum %}
 		<article class="media content-section">
 		  <div class="media-body">
 		    <div class="article-metadata">
@@ -37,6 +47,7 @@ que, accepted_answer, [ans_id, answer, score, [comm, score, pol]]
 		      <br><br>
 		           
 		     		{% for comm in res[3] %}
+		     		{% if comm[1]>=minimum and comm[1]<=maximum %}
 		     			{% if comm[2] != -1 %}
 
 		     			<article class="media content-section" style = "margin-left:15%;color:#ffffff;
@@ -50,12 +61,13 @@ que, accepted_answer, [ans_id, answer, score, [comm, score, pol]]
 		     						<p>{{ comm[0] }}</p>
 				      		<span class="badge badge-secondary" >{{ comm[1] }}</span>			
 		      			</article>
-
-		      		    {% endif %}
+		      			{% endif %}
+		      		{% endif %}
 		      		{% endfor %}		  	  
 		    </div>
 		  </div>
 		</article>
+	{% endif %}
 	{% endfor %}
 </form>
 {% endblock content %}

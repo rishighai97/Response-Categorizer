@@ -116,6 +116,8 @@ def final_score(comments_wm,comments_ln,answers_wm,answers_ln,comments_polarity)
 	answers_score = []
 	for i in range(0,len(answers_wm)):
 		answers_val = answers_wm[i]*0.6+answers_ln[i]*0.4
+		answers_val = answers_val * 100
+		answers_val = round(answers_val,2)
 		answers_score.append(answers_val)
 
 	comments_score = []
@@ -136,6 +138,8 @@ def final_score(comments_wm,comments_ln,answers_wm,answers_ln,comments_polarity)
 					else:
 						pol = 0
 				comments_val = comments_ln[i][j]*0.3 + comments_wm[i][j]*0.5 + pol
+				comments_val = comments_val*100
+				comments_val = round(comments_val,2)
 				temp_score.append(comments_val)
 			comments_score.append(temp_score)
 	return comments_score, answers_score

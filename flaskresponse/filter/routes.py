@@ -32,7 +32,7 @@ def filter():
 			results_asc = results[0]
 			results_desc = results[1]
 			form = SortingForm()
-			return render_template('filter_results.html', form=form, title='Results',result = results_desc)
+			return render_template('filter_results.html', form=form, title='Results',result = results_desc, minimum = 0, maximum = 100)
 	return render_template('url.html',title='Upload',form=form,legend ='Enter URL')
 
 
@@ -51,8 +51,10 @@ def filter_results():
 	results_asc = results[0]
 	results_desc = results[1]
 	if form.validate_on_submit():
+		minimum = float(form.minimum.data)
+		maximum = float(form.maximum.data)
 		if form.htl.data:
-			return render_template('filter_results.html', form=form, title='Results', result=results_desc)
+			return render_template('filter_results.html', form=form, title='Results', result=results_desc, minimum = minimum, maximum = maximum)
 		if form.lth.data:
-			return render_template('filter_results.html', form=form, title='Results', result=results_asc)	
-	return render_template('filter_results.html', form=form, title='Results', result=results_desc)
+			return render_template('filter_results.html', form=form, title='Results', result=results_asc, minimum = minimum, maximum = maximum)	
+	return render_template('filter_results.html', form=form, title='Results', result=results_desc, minimum = 0, maximum = 100)
