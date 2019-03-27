@@ -17,3 +17,5 @@ class SortingForm(FlaskForm):
 	lth = SubmitField('Low To High')
 	minimum = StringField('Start',default = 0)
 	maximum = StringField('End',default = 100)
+
+

@@ -2,8 +2,6 @@ from flask import render_template, Blueprint
 
 main = Blueprint('main', __name__)
 
-
-@main.route("/")
 @main.route("/home") # routes for home page
 def home():
 	return render_template('home.html') # render template is used to display the page to be displayed when the route is called. posts is passed and displayed on home page using Jinja templating

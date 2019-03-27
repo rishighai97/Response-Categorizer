@@ -68,23 +68,24 @@ body {
 <body>
 
 	<!-- Bootstrap CSS -->
-	<div id="mySidenav" class="sidenav bg-dark">
-  		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		     <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
-		     <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About Us</a>
+	<div id="mySidenav" class="sidenav bg-steel">
+  		<a href="javascript:void(0)" style="color:white;" class="closebtn" onclick="closeNav()">&times;</a>
+		     <a class="nav-item nav-link" style="color:white;" href="{{ url_for('main.home') }}">Home</a>
+		     <a class="nav-item nav-link" style="color:white;" href="{{ url_for('main.about') }}">About Us</a>
 		     {% if current_user.is_authenticated %}
-		     	<a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
-		        <a class="nav-item nav-link" href="{{ url_for('filter_blueprint.filter') }}">Filter</a>
-		        <a class="nav-item nav-link" href="{{ url_for('filter_blueprint.before_filter_display') }}">Data</a>
+		     	<a class="nav-item nav-link" style="color:white;" href="{{ url_for('users.account') }}">Account</a>
+		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.filter') }}">Filter</a>
+		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.before_filter_display') }}">Data</a>
 		      
-		        <a class="nav-item nav-link" href="{{ url_for('filter_blueprint.filter_results') }}">Results</a>
+		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.filter_results') }}">Results</a>
+		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.report') }}">Report</a>
 		     {% endif %}  		
 	</div>
 
 
 	<header class="site-header">
 
-		  <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top" id="nav">
+		  <nav class="navbar navbar-expand-md bg-steel navbar-dark fixed-top" id="nav">
 		  	<span style="font-size:30px;cursor:pointer;color:#ffffff" onclick="openNav()">&#9776;</span>
 		    <div class="container">
 

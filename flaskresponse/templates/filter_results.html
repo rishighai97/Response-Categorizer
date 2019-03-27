@@ -5,13 +5,20 @@
 0 - question
 1 - accepted answer
 2 - answers
-que, accepted_answer, [ans_id, answer, score, [comm, score, pol]]
+que, accepted_answer, [ans_id, answer_user, answer, score, [comm_user, comm, score, pol]]
 -->
 
 <head>
 	<script>
-
-	</script>
+	function showFilter() {
+	  var x = document.getElementById("filter");
+	  if (x.style.display === "none") {
+	    x.style.display = "block";
+	  } else {
+	    x.style.display = "none";
+	  }
+	}
+</script>
 </head>
 
 
@@ -21,50 +28,66 @@ que, accepted_answer, [ans_id, answer, score, [comm, score, pol]]
 <h1>
 	{{result[0]}}
 </h1>
+<input type="button" class = "btn btn-outline-info" onclick="showFilter()" value="Filter">
+
+<div id="filter" style="display: none;">
+	<br>
+	<article class="media content-section">
+		<div class="media-body">
+		   	<div class="article-metadata">
+				{{form.htl(class="btn btn-outline-info")}} {{form.lth(class="btn btn-outline-info")}}<br>
+				<br><p>Enter the range (between 0 to 100):</p>
+				{{form.minimum.label(class="form-control-label")}} : {{form.minimum(class="form-control form-control-lg") }}<br>
+				{{form.maximum.label(class="form-control-label")}}  :  {{form.maximum(class="form-control form-control-lg") }}
+			</div>
+		</div>
+	</article>	
+</div>
+
 
 <h4>Model Answer</h4>
 		<article class="media content-section">
 		  <div class="media-body">
-		    <div class="article-metadata">
 		      <h6><a class="article-title">{{ result[1] }}</a></h6>
-		    </div>
 		  </div>
 		</article>
 
-<!-- Control buttons -->
-{{form.htl(class="btn btn-outline-info")}} {{form.lth(class="btn btn-outline-info")}}<br>
-{{form.minimum.label(class="form-control-label")}} : {{form.minimum(class="form-control form-control-lg") }}<br>
-{{form.maximum.label(class="form-control-label")}}  :  {{form.maximum(class="form-control form-control-lg") }} 	    
-<h4>Answers</h4>
+
 	
 	{% for res in result[2] %}
-	{% if res[2]>=minimum and res[2]<=maximum %}
+	{% if res[3]>=minimum and res[3]<=maximum %}
 		<article class="media content-section">
+			
 		  <div class="media-body">
-		    <div class="article-metadata">
-		    	<span class="badge badge-secondary">{{ res[2] }}</span>	 
-		      <h6><a class="article-title">{{ res[1] }}</a></h6>	
+		    
+		    	<span class="badge badge-secondary" style="color:#ffffff">{{res[1]}}</span>
+		    	<span class="badge badge-secondary" style="float: right;">{{ res[3] }}</span>	 
+		      <h6><a class="article-title">{{ res[2] }}</a></h6>	
 		      <br><br>
-		           
-		     		{% for comm in res[3] %}
-		     		{% if comm[1]>=minimum and comm[1]<=maximum %}
-		     			{% if comm[2] != -1 %}
+		          	
+		     		{% for comm in res[4] %}
+		     		{% if comm[2]>=minimum and comm[2]<=maximum %}
+		     			{% if comm[3] != -1 %}
 
 		     			<article class="media content-section" style = "margin-left:15%;color:#ffffff;
-		     				{% if comm[2]==1 %}
+		     				{% if comm[3]==1 %}
 		     					background-color: green;
 		     				{% else %}
 		     					background-color: red;
 		     				{% endif %}
 		     			">	
-		     						
-		     						<p>{{ comm[0] }}</p>
-				      		<span class="badge badge-secondary" >{{ comm[1] }}</span>			
+		     			<div class="media-body">
+		    				
+									<span class="badge badge-secondary" style="color:white;">{{comm[0]}}</span>
+		     						<span class="badge badge-secondary" style="float: right;">{{ comm[2] }}</span>	
+		     						<p>{{ comm[1] }}</p>
+				      		
+				      	</div>		
 		      			</article>
 		      			{% endif %}
 		      		{% endif %}
 		      		{% endfor %}		  	  
-		    </div>
+		    
 		  </div>
 		</article>
 	{% endif %}

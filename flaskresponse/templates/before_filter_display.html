@@ -6,6 +6,7 @@
 	{{ question }}
 </h1>
 
+		
 <h4>Model Answer</h4>
 		<article class="media content-section">
 		  <div class="media-body">
@@ -31,14 +32,16 @@
 		<article class="media content-section">
 		  <div class="media-body">
 		    <div class="article-metadata">
-		      <h6><a class="article-title">{{ ans }}</a></h6>		      
+		    <span class="badge badge-secondary" style="color:#ffffff">{{answers_user[loop.index0]}}</span>
+		    		<h6><a class="article-title">{{ans}}</a></h6>		      
 		      	{% if comments[loop.index0] is not string and comments[loop.index0] is iterable %}
-		     		{% for comm in comments[loop.index0] %}
+		     		{% for comm,user in zip(comments[loop.index0],comments_user[loop.index0]) %}
 		     			<article class="media content-section" style = "margin-left:15%;background-color: #5f788a;color:#ffffff">
+		     					<span class="badge badge-secondary" style="color:#ffffff">{{user}}</span>
 		      					<p>{{ comm }}</p>
 		      			</article>
 		      		{% endfor %}
-		      	{% endif %}		  	  
+		      	{% endif %}	
 		    </div>
 		  </div>
 		</article>

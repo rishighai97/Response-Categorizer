@@ -22,6 +22,7 @@ def register():
 		return redirect(url_for('users.login')) # User is refirected to login page so that now they can login to the system
 	return render_template('register.html',title='Register',form=form) # The form object is passed to the view and the components are displayed using jinja templating. If any errors are there, they are also displayed in the view (register.html)
 
+@users.route("/",methods=['GET','POST'])
 @users.route("/login",methods=['GET','POST'])
 def login():
 	if current_user.is_authenticated:
@@ -40,7 +41,7 @@ def login():
 @users.route("/logout")
 def logout():
 	logout_user() # logs out the user from login_manager system
-	return redirect(url_for('main.home')) # User is redirected to home after logout
+	return redirect(url_for('users.login')) # User is redirected to home after logout
 
 
 @users.route("/account",methods=['GET','POST']) 

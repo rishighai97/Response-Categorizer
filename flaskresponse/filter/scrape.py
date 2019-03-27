@@ -16,26 +16,44 @@ def cleanhtml(raw_html):
   cleanr = re.compile('<.*?>')
   cleantext = re.sub(cleanr, '', raw_html)
   return cleantext
-
+'''
+for ans in soup.find_all(class_='answer'):
+	print()
+	if ans.find_all(class_='comment-user'):
+		for c in ans.find_all(class_='comment-user'):
+			print(c.get_text())
+		print('\n')
+'''
 
 def get_question_answers_comments(soup):
 	question = cleanhtml(soup.find(class_= 'question-hyperlink').get_text())
 	answers = []
+	answers_user = []
 	comments = []
+	comments_user = []
 	for ans in soup.find_all(class_ = 'answer'):
 		if ans.find(class_='js-accepted-answer-indicator grid--item fc-green-500 ta-center p4'):
 			continue
-		text = cleanhtml(ans.find(class_='post-text').get_text())
+		text = ans.find(class_='post-text').get_text()
 		answers.append(text)
+		if ans.find(class_='user-details').findChild():
+			answers_user.append(cleanhtml(ans.find(class_='user-details').findChild().get_text()))
+		else:
+			answers_user.append(cleanhtml(ans.find(class_='user-details').get_text()))
 		if ans.find_all(class_='comment-copy'):
 			temp = []
+			temp_user = []
 			for c in ans.find_all(class_='comment-copy'):
 				text = cleanhtml(c.get_text())
 				temp.append(text)
+			for c in ans.find_all(class_='comment-user'):
+				temp_user.append(c.get_text())
 			comments.append(temp)
+			comments_user.append(temp_user)
 		else:
 			comments.append('none') # 'none' if no comments
-	return question, answers, comments
+			comments_user.append('none')
+	return question, answers, comments, answers_user, comments_user
 
 def print_answers_comments(answers,comments):
 	for i in range(len(answers)):
