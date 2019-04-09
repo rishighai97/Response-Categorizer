@@ -22,15 +22,15 @@ def retrieve():
 	return results
      
 def word_movers_score(comments,answers,accepted_answer):
-	min_wm_ans = float('inf')
-	max_wm_ans = float('-inf')
-	min_ln_ans = float('inf')
-	max_ln_ans = float('-inf')
+	min_wm = 0
+	max_wm = 4
 
-	min_wm_comm = float('inf')
-	max_wm_comm = float('-inf')
-	min_ln_comm = float('inf')
-	max_ln_comm = float('-inf')
+	min_ln = 0
+	max_ln = 1
+	ln_ans = len(word_tokenize(accepted_answer))
+
+	accepted = word_tokenize(accepted_answer)
+	accepted = [lemmatizer.lemmatize(i).lower() for i in accepted]
 
 	comments_score = []
 	comments_length = []
@@ -44,19 +44,24 @@ def word_movers_score(comments,answers,accepted_answer):
 			for c in comm:
 				current_words = word_tokenize(c)
 				current_words = [lemmatizer.lemmatize(i).lower() for i in current_words]
-				acc = word_tokenize(accepted_answer)
-				acc = [lemmatizer.lemmatize(i).lower() for i in acc]
-				val_wm = model.wmdistance(current_words, acc)
-				if val_wm<=min_wm_comm:
-					min_wm_comm = val_wm
-				if val_wm>max_wm_comm:
-					max_wm_comm = val_wm
+				val_wm = model.wmdistance(current_words, accepted)
+				if val_wm>4:
+					val_wm = 0
+				else:
+					val_wm = (val_wm - min_wm)/(max_wm-min_wm)
+					val_wm = 1 - val_wm	
 				score_wm.append(val_wm)
-				val_ln=len(current_words)/len(word_tokenize(accepted_answer))
-				if val_ln<=min_ln_comm:
-					min_ln_comm = val_ln
-				if val_ln>max_ln_comm:
-					max_ln_comm = val_ln
+
+				val_ln=len(current_words)/ln_ans
+				
+				if val_ln<=0.08:
+					val_ln = 0
+				elif val_ln>=1:
+					val_ln = 1
+				else:
+					val_ln = (val_ln - min_ln)/(max_ln - min_ln)
+
+
 				score_ln.append(val_ln)
 			comments_score.append(score_wm)
 			comments_length.append(score_ln)
@@ -67,64 +72,57 @@ def word_movers_score(comments,answers,accepted_answer):
 	for ans in answers:
 		current_words = word_tokenize(ans)
 		current_words = [lemmatizer.lemmatize(i).lower() for i in current_words]
-		acc = word_tokenize(accepted_answer)
-		acc = [lemmatizer.lemmatize(i).lower() for i in acc]
-		val_wm = model.wmdistance(current_words, accepted_answer)
-		if val_wm<=min_wm_ans:
-			min_wm_ans = val_wm
-		if val_wm>max_wm_ans:
-			max_wm_ans = val_wm	
-		val_ln = len(current_words)/len(word_tokenize(accepted_answer))
-		if val_ln<=min_ln_ans:
-			min_ln_ans = val_ln
-		if val_ln>max_ln_ans:
-			max_ln_ans = val_ln				
+		val_wm = model.wmdistance(current_words, accepted)
+		if val_wm>4:
+			val_wm = 0
+		else:
+			val_wm = (val_wm - min_wm)/(max_wm-min_wm)
+			val_wm = 1 - val_wm	
+		
+		val_ln = len(current_words)/ln_ans
+		
+		
+		if val_ln<=0.08:
+			val_ln = 0
+		elif val_ln>=1:
+			val_ln = 1
+		else:
+			val_ln = (val_ln - min_ln)/(max_ln - min_ln)
+		
 		answers_score.append(val_wm)
 		answers_length.append(val_ln)
 
-	final_answers_score_wm = []
-	final_answers_score_ln = []
-	for i in range(0,len(answers_score)):
-		val_wm = (answers_score[i]-min_wm_ans)/(max_wm_ans-min_wm_ans)
-		val_wm = 1 - val_wm
-		final_answers_score_wm.append(val_wm)
+	
 
-		val_ln = (answers_length[i]-min_ln_ans)/(max_ln_ans-min_ln_ans)
-		'''val_ln = Decimal(val_ln)
-		val_ln = val_ln.quantize(Decimal('0.0001'))'''
-		final_answers_score_ln.append(val_ln)
-
-
-	final_comments_score_wm = []
-	final_comments_score_ln = []
-	for i  in range(len(comments_score)):
-		if comments_score[i] == 'none':
-			final_comments_score_wm.append('none')
-			final_comments_score_ln.append('none')
-		else:
-			temp_wm = []
-			temp_ln = []
-			for j in range(0,len(comments_score[i])):
-				val_wm = (comments_score[i][j]-min_wm_comm)/(max_wm_comm-min_wm_comm)
-				val_wm = 1 - val_wm
-				temp_wm.append(val_wm)
-
-				val_ln = (comments_length[i][j]-min_ln_comm)/(max_ln_comm-min_ln_comm)
-				temp_ln.append(val_ln)
-			final_comments_score_wm.append(temp_wm)
-			final_comments_score_ln.append(temp_ln)
-			#final_score()
-
-	return final_comments_score_wm,final_comments_score_ln,final_answers_score_wm,final_answers_score_ln
+	return comments_score,comments_length,answers_score,answers_length
 
 def final_score(comments_wm,comments_ln,answers_wm,answers_ln,comments_polarity):
 	answers_score = []
+	wm = 0
+	ln = 0
 	for i in range(0,len(answers_wm)):
-		answers_val = answers_wm[i]*0.6+answers_ln[i]*0.4
+
+		if answers_ln[i] <= 0.2:
+			ln = 0.8
+			wm = 0.2
+		elif answers_ln[i] > 0.2 and answers_ln[i] <= 0.5:
+			ln = 0.6
+			wm = 0.4
+		elif answers_ln[i] > 0.5 and answers_ln[i] <= 0.8:
+			ln = 0.4
+			wm = 0.6
+		elif answers_ln[i] > 0.8 and answers_ln[i] <= 1:
+			ln = 0.3
+			wm = 0.7
+
+		answers_val = answers_wm[i]*wm+answers_ln[i]*ln
+		#answers_val = answers_ln[i]
 		answers_val = answers_val * 100
 		answers_val = round(answers_val,2)
 		answers_score.append(answers_val)
-
+	wm = 0
+	ln = 0
+	pol = 0
 	comments_score = []
 	for i in range(len(comments_wm)):
 		if comments_wm[i] == 'none':
@@ -132,17 +130,32 @@ def final_score(comments_wm,comments_ln,answers_wm,answers_ln,comments_polarity)
 		else:
 			temp_score = []
 			for j in range(0,len(comments_wm[i])):
+
+				if comments_ln[i][j] <= 0.3:
+					ln = 0.85
+					wm = 0.05
+				elif comments_ln[i][j] > 0.3 and comments_ln[i][j] <= 0.5:
+					ln = 0.65
+					wm = 0.25
+				elif comments_ln[i][j] > 0.5 and comments_ln[i][j] <= 0.8:
+					ln = 0.25
+					wm = 0.65
+				elif comments_ln[i][j] > 0.8 and comments_ln[i][j] <= 1:
+					ln = 0.2
+					wm = 0.7
+
 				if answers_score[i]>=50:
 					if comments_polarity[i][j]==1:
-						pol = 0.2
+						pol = 0.1
 					else:
-						pol = 0
+						pol = 1
 				else:
 					if comments_polarity[i][j]==0:
-						pol = 0.2
+						pol = 0.1
 					else:
 						pol = 0
-				comments_val = comments_ln[i][j]*0.3 + comments_wm[i][j]*0.5 + pol
+				comments_val = comments_ln[i][j]*ln+ comments_wm[i][j]*wm + pol
+				#comments_val = comments_ln[i][j]
 				comments_val = comments_val*100
 				comments_val = round(comments_val,2)
 				temp_score.append(comments_val)
