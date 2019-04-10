@@ -1,4 +1,56 @@
+<head>
+	<style type="text/css">
+body{
+	position: relative;
+}
+	.bg {
+	position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    overflow: auto;
+	}
+
+
+  #section2 {padding-top:50px;height:500px;background-color: green;}
+  #section3 {padding-top:50px;height:500px;}
+
+	/* Centered text */
+.left {
+  position: absolute;
+  top: 50%;
+  font-size: 50px;
+}
+
+.container {
+  position: relative;
+  color: white;
+}
+	</style>
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
 {% extends 'layout.html' %}
 {% block content %}
-	<h1>Home</h1>
+
+	<div id="section1">
+		<img src="{{img}}" class="bg">
+		<div class="container">
+			<div class="left">
+				Response Categorizer<br>
+					<p style="font-size: 30px">			-An Automated Scoring System for Online Discussion Forums</p>
+			</div>	
+		</div>
+	</div>
+
+	<div id="section2">
+
+asdfasdf
+	</div>
+
+	
 {% endblock content %}
+</body>

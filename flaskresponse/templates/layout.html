@@ -10,6 +10,8 @@ body {
   transition: background-color .5s;
 }
 
+
+
 .sidenav {
   height: 100%;
   width: 0;
@@ -22,23 +24,38 @@ body {
   padding-top: 60px;
 }
 
+
 .sidenav a {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
-  font-size: 25px;
-  color: #818181;
+  font-size: 20px;
   display: block;
+  color: white;
   transition: 0.3s;
 }
 
-.sidenav a:hover {
-  color: #f1f1f1;
+.sidenav #a:hover {
+  background-color: #ffffff;
+  opacity: 0.5;
+  color: #5f788a;
 }
+
+
+.sidenav p{
+	font-size: 20px;
+}
+
+hr{
+	width:90%;
+	margin:0 auto;
+	background-color: #ffffff;
+}
+
 
 .sidenav .closebtn {
   position: absolute;
   top: 0;
-  right: 25px;
+  right: 20px;
   font-size: 36px;
   margin-left: 50px;
 }
@@ -51,6 +68,11 @@ body {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+
+
+	
+
+
 </style>
 
     <!-- Bootstrap CSS -->
@@ -66,27 +88,43 @@ body {
 </head>
 
 <body>
-
+{% if current_user.is_authenticated %}
 	<!-- Bootstrap CSS -->
-	<div id="mySidenav" class="sidenav bg-steel">
+	<div id="mySidenav" class="sidenav bg-dark" id="sidebar">
   		<a href="javascript:void(0)" style="color:white;" class="closebtn" onclick="closeNav()">&times;</a>
-		     <a class="nav-item nav-link" style="color:white;" href="{{ url_for('main.home') }}">Home</a>
-		     <a class="nav-item nav-link" style="color:white;" href="{{ url_for('main.about') }}">About Us</a>
-		     {% if current_user.is_authenticated %}
-		     	<a class="nav-item nav-link" style="color:white;" href="{{ url_for('users.account') }}">Account</a>
-		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.filter') }}">Filter</a>
-		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.before_filter_display') }}">Data</a>
-		      
-		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.filter_results') }}">Results</a>
-		        <a class="nav-item nav-link" style="color:white;" href="{{ url_for('filter_blueprint.report') }}">Report</a>
-		     {% endif %}  		
-	</div>
 
+  		<h4 style="color:white;text-align:center">Dashboard</h4>
+  		<hr><br>
+  			<ul class="list-unstyled sidebar-body">
+  				
+  				<a style="color: #777;">Menu</a>
+		    	<li> <a id="a" class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a></li>
+		     	<li><a id="a" class="nav-item nav-link"  href="{{ url_for('main.about') }}">About Us</a></li>
+				<li><a id="a" class="nav-item nav-link"  href="{{ url_for('filter_blueprint.before_filter_display') }}">Data</a></li>
+		    </ul><hr>
+		    <ul class="list-unstyled sidebar-body">
+		    	<a style="color: #777;">Filter</a>
+		    	<li><a id="a" class="nav-item nav-link" href="{{ url_for('filter_blueprint.filter') }}">Filter</a></li>
+		    	<li><a id="a" class="nav-item nav-link" href="{{ url_for('filter_blueprint.filter_results') }}">Results</a></li>
+		        <li><a id="a" class="nav-item nav-link" href="{{ url_for('filter_blueprint.report') }}">Report</a></li>
+		    </ul><hr>
+		    <ul class="list-unstyled sidebar-body">	
+		    	<a style="color: #777;">Account</a>     
+		     	<li><a id="a" class="nav-item nav-link" href="{{ url_for('users.account') }}">Account Settings</a></li>
+		     	<li><a id="a" class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a></li>
+		    </ul>
+		        
+		        
+	</div>
+{% endif %} 
+`
 
 	<header class="site-header">
 
 		  <nav class="navbar navbar-expand-md bg-steel navbar-dark fixed-top" id="nav">
-		  	<span style="font-size:30px;cursor:pointer;color:#ffffff" onclick="openNav()">&#9776;</span>
+		  	{% if current_user.is_authenticated %}
+		  		<span style="font-size:30px;cursor:pointer;color:#ffffff" onclick="openNav()">&#9776;</span>
+		  	{% endif %} 
 		    <div class="container">
 
 		      <a class="navbar-brand mr-4" href="/">Response Categorizer</a>
@@ -158,9 +196,9 @@ body {
 		});
 
 		function openNav() {
-  			document.getElementById("mySidenav").style.width = "250px";
-  			document.getElementById("main").style.marginLeft = "250px";
-  			document.getElementById("nav").style.marginLeft = "250px";
+  			document.getElementById("mySidenav").style.width = "200px";
+  			document.getElementById("main").style.marginLeft = "200px";
+  			document.getElementById("nav").style.marginLeft = "200px";
   			
 		}
 
