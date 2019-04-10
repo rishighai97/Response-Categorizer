@@ -10,11 +10,13 @@ body {
   transition: background-color .5s;
 }
 
-
+#openBtn{
+	visibility: "hidden";
+}
 
 .sidenav {
   height: 100%;
-  width: 0;
+  width: 200px;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -59,17 +61,21 @@ hr{
   font-size: 36px;
   margin-left: 50px;
 }
-
+{% if current_user.is_authenticated %} 
 #main,#nav{
   transition: margin-left .5s;
+  margin-left: 200px;
 }
-
+{% endif %}
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
 
-
+#profile_pics{
+	height: 15%;
+	width: 80%;
+}
 	
 
 
@@ -92,7 +98,7 @@ hr{
 	<!-- Bootstrap CSS -->
 	<div id="mySidenav" class="sidenav bg-dark" id="sidebar">
   		<a href="javascript:void(0)" style="color:white;" class="closebtn" onclick="closeNav()">&times;</a>
-
+  		<img class="rounded-circle mx-auto d-block" id = "profile_pics" src="../static/profile_pics/{{current_user.image_file}}">
   		<h4 style="color:white;text-align:center">Dashboard</h4>
   		<hr><br>
   			<ul class="list-unstyled sidebar-body">
@@ -123,7 +129,7 @@ hr{
 
 		  <nav class="navbar navbar-expand-md bg-steel navbar-dark fixed-top" id="nav">
 		  	{% if current_user.is_authenticated %}
-		  		<span style="font-size:30px;cursor:pointer;color:#ffffff" onclick="openNav()">&#9776;</span>
+		  		<span id="openBtn" style="font-size:30px;cursor:pointer;color:#ffffff" onclick="openNav()">&#9776;</span>
 		  	{% endif %} 
 		    <div class="container">
 
@@ -186,12 +192,13 @@ hr{
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+
 	<!-- Sidenav -->
 	<script>
 		document.getElementById('main').addEventListener("click", function (evt) {
-		    document.getElementById("mySidenav").style.width = "0";
-		  	document.getElementById("main").style.marginLeft= "0";
-		  	document.getElementById("nav").style.marginLeft = "0";
+		    	document.getElementById("mySidenav").style.width = "0";
+		  		document.getElementById("main").style.marginLeft= "0";
+		  		document.getElementById("nav").style.marginLeft = "0";
 		  	document.body.style.backgroundColor = "white";
 		});
 
@@ -199,13 +206,14 @@ hr{
   			document.getElementById("mySidenav").style.width = "200px";
   			document.getElementById("main").style.marginLeft = "200px";
   			document.getElementById("nav").style.marginLeft = "200px";
-  			
+  			document.getElementById("openBtn").style.visibility = "hidden";
 		}
 
 		function closeNav() {
 		  document.getElementById("mySidenav").style.width = "0";
 		  document.getElementById("main").style.marginLeft= "0";
 		  document.getElementById("nav").style.marginLeft = "0";
+		  document.getElementById("openBtn").style.visibility = "visible";
 		  
 		}
 	</script>

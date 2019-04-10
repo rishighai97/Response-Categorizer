@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint, session
 from flaskresponse import db, bcrypt 
 from flaskresponse.models import User
 from flaskresponse.users.forms import RegistrationForm, LoginForm, UpdateAccountForm

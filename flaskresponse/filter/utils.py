@@ -1,6 +1,7 @@
 import pickle
 import os
 from flask import current_app
+import matplotlib.pyplot as plt
 
 
 
