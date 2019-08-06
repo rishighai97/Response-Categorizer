@@ -105,7 +105,8 @@ hr{
   				
   				<a style="color: #777;">Menu</a>
 		    	<li> <a id="a" class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a></li>
-		     	<li><a id="a" class="nav-item nav-link"  href="{{ url_for('main.about') }}">About Us</a></li>
+		    	<!--
+		     	<li><a id="a" class="nav-item nav-link"  href="{{ url_for('main.about') }}">About Us</a></li>-->
 				<li><a id="a" class="nav-item nav-link"  href="{{ url_for('filter_blueprint.before_filter_display') }}">Data</a></li>
 		    </ul><hr>
 		    <ul class="list-unstyled sidebar-body">
@@ -118,9 +119,7 @@ hr{
 		    	<a style="color: #777;">Account</a>     
 		     	<li><a id="a" class="nav-item nav-link" href="{{ url_for('users.account') }}">Account Settings</a></li>
 		     	<li><a id="a" class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a></li>
-		    </ul>
-		        
-		        
+		    </ul>        
 	</div>
 {% endif %} 
 `

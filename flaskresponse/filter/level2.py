@@ -148,7 +148,7 @@ def final_score(comments_wm,comments_ln,answers_wm,answers_ln,comments_polarity)
 					if comments_polarity[i][j]==1:
 						pol = 0.1
 					else:
-						pol = 1
+						pol = 0
 				else:
 					if comments_polarity[i][j]==0:
 						pol = 0.1
