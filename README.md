@@ -37,6 +37,8 @@ pip install flask-wtf
 pip install -U gensim
 pip install -U nltk
 pip install -U numpy
+pip install matplotlib
+pip install pandas
 ```
 
 Steps to install the project
