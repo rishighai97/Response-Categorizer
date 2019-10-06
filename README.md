@@ -39,6 +39,7 @@ pip install -U nltk
 pip install -U numpy
 pip install matplotlib
 pip install pandas
+nltk.download('punkt') in python environment
 ```
 
 Steps to install the project
