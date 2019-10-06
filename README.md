@@ -39,7 +39,9 @@ pip install -U nltk
 pip install -U numpy
 pip install matplotlib
 pip install pandas
+pip install pyemd
 nltk.download('punkt') in python environment
+nltk.download('wordnet') in python environment
 ```
 
 Steps to install the project
